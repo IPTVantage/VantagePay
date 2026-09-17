@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getProductById, SUBSCRIPTION_PLANS } from '../../subscription-plans.mjs';
+import { getProductById, SUBSCRIPTION_PLANS } from '../subscription-plans.mjs';
 
 const expected = {
     standard_1m: 14.99,
@@ -28,7 +28,7 @@ test('Premium 1 Year is exactly €99.99 and marked BEST VALUE', () => {
     assert.equal(product.badge, 'BEST VALUE');
 });
 
-test('unknown products are rejected by the shared catalog', () => {
+test('unknown products are rejected by the bot catalog', () => {
     assert.equal(getProductById('premium_99'), null);
     assert.equal(getProductById(''), null);
 });

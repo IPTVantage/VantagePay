@@ -1,6 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { InvalidProductError } from './order-service.js';
-import { ORDER_STATUSES } from '../../subscription-plans.mjs';
+import { ORDER_STATUSES } from '../subscription-plans.mjs';
 
 const ADMIN_FORM_FIELDS = Object.freeze([
     Object.freeze({ key: 'account_username', label: 'Username', prompt: '<b>Step 1/4 — Username</b>\n\nSend the IPTV account username.' }),

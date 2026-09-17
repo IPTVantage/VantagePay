@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { getProductById, ORDER_STATUSES } from '../../subscription-plans.mjs';
+import { getProductById, ORDER_STATUSES } from '../subscription-plans.mjs';
 
 export class InvalidProductError extends Error {}
 

@@ -43,8 +43,8 @@ export function createApp({ config, botHandler, logger = console }) {
         try {
             await botHandler.handleUpdate(request.body);
             return response.status(200).json({ ok: true });
-        } catch {
-            logger.error('Telegram update processing failed.');
+        } catch (error) {
+            logger.error(`Telegram update processing failed: ${error?.message || 'Unknown error.'}`);
             return response.status(500).json({ error: 'Unable to process Telegram update.' });
         }
     });

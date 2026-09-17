@@ -29,6 +29,34 @@ export function createRuntime(env = process.env) {
     return { app, botHandler, config, repository, telegram };
 }
 
+export async function configureTelegramDelivery({
+    config,
+    botHandler,
+    telegram,
+    logger = console,
+    pollingFactory = createTelegramPoller
+}) {
+    if (!botHandler || !telegram) return null;
+
+    if (config.telegramMode === 'polling') {
+        const poller = pollingFactory({ telegram, botHandler });
+        poller.run().catch((error) => {
+            logger.error(`Telegram polling stopped: ${error?.message || 'Unknown error.'}`);
+        });
+        return poller;
+    }
+
+    const webhookUrl = `${config.appBaseUrl}/api/telegram/webhook`;
+    await telegram.call('setWebhook', {
+        url: webhookUrl,
+        secret_token: config.telegramWebhookSecret,
+        allowed_updates: ['message', 'callback_query'],
+        drop_pending_updates: false
+    });
+    logger.log(`Telegram webhook registered: ${webhookUrl}`);
+    return null;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
     const { app, botHandler, config, repository, telegram } = createRuntime();
     const missing = missingBotConfig(config);
@@ -36,16 +64,16 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
         console.warn(`Telegram payment flow is disabled until these variables are configured: ${missing.join(', ')}`);
     }
 
+    let poller = null;
     const server = app.listen(config.port, '0.0.0.0', () => {
         console.log(`IPTVantage listening on port ${config.port}.`);
-
-        if (botHandler && config.telegramMode === 'polling') {
-            poller = createTelegramPoller({ telegram, botHandler });
-            poller.run().catch(() => console.error('Telegram polling stopped unexpectedly.'));
-        }
+        configureTelegramDelivery({ config, botHandler, telegram })
+            .then((activePoller) => { poller = activePoller; })
+            .catch((error) => {
+                console.error(`Telegram ${config.telegramMode} setup failed: ${error?.message || 'Unknown error.'}`);
+            });
     });
 
-    let poller = null;
     const shutdown = () => {
         poller?.stop();
         server.close(async () => {

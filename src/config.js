@@ -40,6 +40,7 @@ export function missingBotConfig(config) {
     if (!config.telegramBotToken) missing.push('TELEGRAM_BOT_TOKEN');
     if (!config.telegramAdminId) missing.push('TELEGRAM_ADMIN_ID');
     if (config.isProduction && !config.mongoDbUri) missing.push('MONGODB_URI');
+    if (config.telegramMode === 'webhook' && !config.appBaseUrl) missing.push('APP_BASE_URL');
     if (config.telegramMode === 'webhook' && !config.telegramWebhookSecret) {
         missing.push('TELEGRAM_WEBHOOK_SECRET');
     }

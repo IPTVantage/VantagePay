@@ -14,7 +14,7 @@ test('local development defaults to polling and does not require MongoDB', () =>
     assert.deepEqual(missingBotConfig(config), []);
 });
 
-test('production requires MongoDB and a webhook secret', () => {
+test('production requires MongoDB, a public URL, and a webhook secret', () => {
     const config = loadConfig({
         NODE_ENV: 'production',
         TELEGRAM_BOT_TOKEN: 'test-token',
@@ -22,5 +22,5 @@ test('production requires MongoDB and a webhook secret', () => {
     });
 
     assert.equal(config.telegramMode, 'webhook');
-    assert.deepEqual(missingBotConfig(config), ['MONGODB_URI', 'TELEGRAM_WEBHOOK_SECRET']);
+    assert.deepEqual(missingBotConfig(config), ['MONGODB_URI', 'APP_BASE_URL', 'TELEGRAM_WEBHOOK_SECRET']);
 });

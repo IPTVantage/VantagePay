@@ -1,0 +1,24 @@
+{
+  "name": "iptvantage-payment-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Telegram payment-review bot for the static IPTVantage website",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js",
+    "check": "node --check src/server.js",
+    "build": "npm run check",
+    "telegram:set-webhook": "node scripts/set-webhook.js",
+    "telegram:webhook-info": "node scripts/webhook-info.js"
+  },
+  "dependencies": {
+    "dotenv": "16.6.1",
+    "express": "4.22.3",
+    "mongodb": "6.21.0"
+  }
+}
